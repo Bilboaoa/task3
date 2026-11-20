@@ -53,18 +53,16 @@ class BookModelTestCase(unittest.TestCase):
             db.session.commit()
 
     def test_year_published_negative(self):
-        book = Book(name='AncientBook', author='Unknown', year_published=-500, book_type='2days')
+        with self.assertRaises(ValueError):
+            book = Book(name='AncientBook', author='Unknown', year_published=-500, book_type='2days')
         db.session.add(book)
         db.session.commit()
-        fetched = db.session.get(Book, book.id)
-        self.assertEqual(fetched.year_published, -500)
-
+    
     def test_invalid_book_type(self):
-        book = Book(name='InvalidTypeBook', author='Author', year_published=2020, book_type='INVALID')
+        with self.assertRaises(ValueError):
+            book = Book(name='InvalidTypeBook', author='Author', year_published=2020, book_type='INVALID')
         db.session.add(book)
         db.session.commit()
-        fetched = db.session.get(Book, book.id)
-        self.assertEqual(fetched.book_type, 'INVALID')
 
     # 3. TESTY WSTRZYKNIĘCIA SQL i JAVASCRIPT (XSS)
 
